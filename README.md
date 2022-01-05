@@ -1,4 +1,4 @@
 # Janus
 I manage suggestions and bug reports.
 
-Rename config.init.json to config.json before running.
+Rename config.init.json to config.json before configuring and running.
