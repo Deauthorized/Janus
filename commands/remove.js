@@ -101,7 +101,7 @@ module.exports = {
                         if (parentMsg) {parentMsg.delete()}
                     })
                 
-                    interaction.editReply( { content: `Done.`, components: [] } )
+                    await interaction.editReply( { content: `Done.`, components: [] } )
                     return "OKAY";
                 }
             })
