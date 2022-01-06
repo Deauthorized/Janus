@@ -88,23 +88,19 @@ module.exports = {
 
             collector.on('collect', async m => {
                 if (m.customId === "select") {
+                    console.log(`${interaction.user.tag} in #${interaction.channel.name} ran a batch purge.`);
+
                     opt.setPlaceholder('Working...')
                     opt.setDisabled(true);
-
                     await m.update({components: [row], ephemeral: true });
 
-                    var purge = new Promise((resolve, reject) => {
-                        m.values.forEach(async m => {
-                            let thread = client.channels.cache.get(m)
-                            let parentMsg = await interaction.channel.messages.fetch(m)
-
-                            if (thread) {await thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
-                            if (parentMsg) {await parentMsg.delete({reason: `Message removed by ${interaction.member.user.username}`})}
-                        })
+                    m.values.forEach(m => {
+                        let thread = client.channels.cache.get(m)
+                        if (thread) {thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
                     })
-                        .then(() => {
-                            interaction.editReply( { content: `Done.`, components: [] } )
-                        })
+
+                    let i = interaction.channel.bulkDelete(m.values, true);
+                    interaction.editReply( { content: `Removed ${i.size} messages.`, components: [] } )
                     return "OKAY";
                 }
             })
