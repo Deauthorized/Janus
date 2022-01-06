@@ -14,8 +14,6 @@ for (const file of commandFiles) {
     console.log(`Loaded command: ${command.data.name}`)
 }
 
-require(path.resolve(__dirname, 'cmdDeploy.js'))
-
 async function startThread(message, type) {
     await message.startThread({
         name: `${type} (${require('crypto').randomBytes(5).toString("hex")})`,
@@ -84,5 +82,7 @@ client.on('interactionCreate', async interaction => {
         }
 	}
 });
+
+require(path.resolve(__dirname, 'cmdDeploy.js'))
 
 client.login(cfg.token);
