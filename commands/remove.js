@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Permissions, MessageActionRow, MessageButton } = require('discord.js');
+const cfg = require('./config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,7 +8,7 @@ module.exports = {
 		.setDescription('Remove a thread and its associated message. Staff only.'),
 	async execute(interaction, client) {
         if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {
-			await interaction.reply({ content: 'You do not have permission to run this command.', ephemeral: true });
+			await interaction.reply({ content: cfg.noPermission, ephemeral: true });
 			return "NO_PERMISSION";
 		}
         if (interaction.channel.type !== "GUILD_PUBLIC_THREAD") {

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Permissions } = require('discord.js');
+const cfg = require('./config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,7 +10,7 @@ module.exports = {
 		.addBooleanOption(option => option.setName('lock').setDescription('Prevent non-administrators from re-opening this thread. Defaults to "False".')),
 	async execute(interaction) {
 		if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {
-			await interaction.reply({ content: 'You do not have permission to run this command.', ephemeral: true });
+			await interaction.reply({ content: cfg.noPermission, ephemeral: true });
 			return "NO_PERMISSION";
 		}
 		if (interaction.channel.type !== "GUILD_PUBLIC_THREAD") {
