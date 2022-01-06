@@ -42,7 +42,7 @@ module.exports = {
                     let mid = await client.channels.cache.get(interaction.channel.parentId).messages.fetch(interaction.channel.id)
     
                     await interaction.channel.delete({reason: `Thread removed by ${interaction.member.user.username}`});
-                    if (mid) {await mid.delete();}
+                    if (mid) {await mid.delete({reason: `Message removed by ${interaction.member.user.username}`});}
                     return "OKAY";
                 }
             });
@@ -97,8 +97,8 @@ module.exports = {
                         let thread = client.channels.cache.get(m)
                         let parentMsg = await interaction.channel.messages.fetch(m)
 
-                        if (thread) {thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
-                        if (parentMsg) {parentMsg.delete()}
+                        if (thread) {await thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
+                        if (parentMsg) {await parentMsg.delete({reason: `Message removed by ${interaction.member.user.username}`})}
                     })
                 
                     await interaction.editReply( { content: `Done.`, components: [] } )
