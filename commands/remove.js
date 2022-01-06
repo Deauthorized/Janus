@@ -22,14 +22,24 @@ module.exports = {
                 .setLabel('Yes, do as I say!')
                 .setStyle('DANGER'),
         );
-        let m = await interaction.reply({ content: 'This action is irreversible. Continue?', components: [row], ephemeral: true })
+        let m = await interaction.reply({ content: `You're about to permanently remove this thread and its parent message. This action will time-out <t:${Math.round(new Date().getTime() / 1000) + 60}:R>. Continue?`, components: [row], ephemeral: true })
 
         const filter = m => m.customId === `destroy-${interaction.channel.id}` && m.user.id === interaction.user.id;
-        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 30000 });
+        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
         
         collector.on('collect', async m => {
             if (m.customId === `destroy-${interaction.channel.id}`) {
-                await m.deferUpdate();
+
+                let row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                        .setCustomId(`destroy-${interaction.channel.id}`)
+                        .setLabel('Removing...')
+                        .setStyle('DANGER')
+                        .setDisabled(true),
+                );
+
+                await m.update({components: [row], ephemeral: true });
 
                 let mid = await client.channels.cache.get(interaction.channel.parentId).messages.fetch(interaction.channel.id)
 
