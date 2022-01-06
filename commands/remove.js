@@ -66,7 +66,7 @@ module.exports = {
                         [
                             {
                                 label: lbl,
-                                description: m.content,
+                                description: m.content.substring(0, 100),
                                 value: `${m.id}`
                             }
                         ]
@@ -81,7 +81,7 @@ module.exports = {
             
             let row = new MessageActionRow().addComponents(opt);
 
-            let m = await interaction.editReply( { content: 'Bulk deletion tool activated.\n', components: [row] } )
+            let m = await interaction.editReply( { content: 'This tool will allow you to permanently delete multiple threads and their associated messages in one action. Please be careful.\n\n', components: [row] } )
 
             const filter = m => m.user.id === interaction.user.id;
             const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
