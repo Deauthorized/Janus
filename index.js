@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const { Client, Collection, Intents, Permissions } = require('discord.js');
-const { REST } = require('@discordjs/rest');
 const cfg = require('./config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -12,7 +11,10 @@ const commandFiles = fs.readdirSync(path.resolve(__dirname, 'commands')).filter(
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.data.name, command);
+    console.log(`Loaded command: ${command.data.name}`)
 }
+
+require(path.resolve(__dirname, 'cmdDeploy.js'))
 
 async function startThread(message, type) {
     await message.startThread({
