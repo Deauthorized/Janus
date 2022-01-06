@@ -74,6 +74,11 @@ module.exports = {
                 }
             })
             
+            if (opt.options.length == 0) {
+                await interaction.editReply('No messages found.')
+                return "OKAY";
+            }
+            
             let row = new MessageActionRow().addComponents(opt);
 
             let m = await interaction.editReply( { content: 'Bulk deletion tool activated.\n', components: [row] } )
@@ -83,12 +88,11 @@ module.exports = {
 
             collector.on('collect', async m => {
                 if (m.customId === "select") {
-                    console.log(m)
                     opt.setPlaceholder('Working...')
                     opt.setDisabled(true);
 
                     await m.update({components: [row], ephemeral: true });
-
+                    
                     m.values.forEach(async m => {
                         let thread = client.channels.cache.get(m)
                         let parentMsg = await interaction.channel.messages.fetch(m)
@@ -97,7 +101,7 @@ module.exports = {
                         if (parentMsg) {parentMsg.delete()}
                     })
                 
-                    interaction.editReply( { content: 'Done.', components: null} )
+                    interaction.editReply( { content: `Done.`, components: [] } )
                     return "OKAY";
                 }
             })
