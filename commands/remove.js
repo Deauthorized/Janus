@@ -12,7 +12,7 @@ module.exports = {
 			return "NO_PERMISSION";
 		}
         if (interaction.channel.type !== "GUILD_PUBLIC_THREAD") {
-			await interaction.reply({ content: 'This command will only function in a thread.', ephemeral: true });
+			await interaction.reply({ content: cfg.notAThread, ephemeral: true });
 			return "NOT_A_THREAD";
 		}
 

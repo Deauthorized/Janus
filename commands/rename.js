@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Permissions } = require('discord.js');
+const cfg = require('./config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,11 +9,11 @@ module.exports = {
 		.addStringOption(option => option.setName('name').setDescription('New name').setRequired(true)),
 	async execute(interaction) {
 		if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {
-			await interaction.reply({ content: 'You do not have permission to run this command.', ephemeral: true });
+			await interaction.reply({ content: cfg.noPermission, ephemeral: true });
 			return "NO_PERMISSION";
 		}
 		if (interaction.channel.type !== "GUILD_PUBLIC_THREAD") {
-			await interaction.reply({ content: 'This command will only function in a thread.', ephemeral: true });
+			await interaction.reply({ content: cfg.notAThread, ephemeral: true });
 			return "NOT_A_THREAD";
 		}
         await interaction.deferReply({ ephemeral: true });
