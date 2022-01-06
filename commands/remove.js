@@ -99,7 +99,7 @@ module.exports = {
                         if (thread) {thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
                     })
 
-                    let i = interaction.channel.bulkDelete(m.values, true);
+                    let i = await interaction.channel.bulkDelete(m.values, true);
                     interaction.editReply( { content: `Removed ${i.size} messages.`, components: [] } )
                     return "OKAY";
                 }
