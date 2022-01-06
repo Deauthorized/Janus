@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { Permissions, MessageActionRow, MessageButton } = require('discord.js');
+const { Permissions, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const cfg = require('../config.json');
 
 module.exports = {
@@ -11,45 +11,98 @@ module.exports = {
 			await interaction.reply({ content: cfg.noPermission, ephemeral: true });
 			return "NO_PERMISSION";
 		}
-        if (interaction.channel.type !== "GUILD_PUBLIC_THREAD") {
-			await interaction.reply({ content: cfg.notAThread, ephemeral: true });
-			return "NOT_A_THREAD";
-		}
 
-        const row = new MessageActionRow()
-        .addComponents(
-            new MessageButton()
-                .setCustomId(`destroy-${interaction.channel.id}`)
-                .setLabel('Yes, do as I say!')
-                .setStyle('DANGER'),
-        );
-        let m = await interaction.reply({ content: `You're about to permanently remove this thread and its parent message. This action will time-out <t:${Math.round(new Date().getTime() / 1000) + 60}:R>. Continue?`, components: [row], ephemeral: true })
+        if (interaction.channel.type == "GUILD_PUBLIC_THREAD") {
+            const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId(`destroy-${interaction.channel.id}`)
+                    .setLabel('Yes, do as I say!')
+                    .setStyle('DANGER'),
+            );
+            let m = await interaction.reply({ content: `You're about to permanently remove this thread and its parent message. This action will time-out <t:${Math.round(new Date().getTime() / 1000) + 60}:R>. Continue?`, components: [row], ephemeral: true })
+    
+            const filter = m => m.customId === `destroy-${interaction.channel.id}` && m.user.id === interaction.user.id;
+            const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+            
+            collector.on('collect', async m => {
+                if (m.customId === `destroy-${interaction.channel.id}`) {
+    
+                    let row = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId(`destroy-${interaction.channel.id}`)
+                            .setLabel('Removing...')
+                            .setStyle('DANGER')
+                            .setDisabled(true),
+                    );
+    
+                    await m.update({components: [row], ephemeral: true });
+    
+                    let mid = await client.channels.cache.get(interaction.channel.parentId).messages.fetch(interaction.channel.id)
+    
+                    await interaction.channel.delete({reason: `Thread removed by ${interaction.member.user.username}`});
+                    if (mid) {await mid.delete();}
+                    return "OKAY";
+                }
+            });
+		} else {
+        await interaction.deferReply({ ephemeral: true });
 
-        const filter = m => m.customId === `destroy-${interaction.channel.id}` && m.user.id === interaction.user.id;
-        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
-        
-        collector.on('collect', async m => {
-            if (m.customId === `destroy-${interaction.channel.id}`) {
+            var opt = new MessageSelectMenu()
+                .setCustomId('select')
+                .setPlaceholder('Select the threads to be removed.')
+                .setMinValues(1)
 
-                let row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setCustomId(`destroy-${interaction.channel.id}`)
-                        .setLabel('Removing...')
-                        .setStyle('DANGER')
-                        .setDisabled(true),
-                );
+            const fetched = await client.channels.cache.get(interaction.channel.id).messages.fetch({limit: 25})
 
-                await m.update({components: [row], ephemeral: true });
+            fetched.forEach(m => {
+                if (m.content.toLowerCase().startsWith("suggestion: ") || m.content.toLowerCase().startsWith("bug: ")) {
+                    let lbl
 
-                let mid = await client.channels.cache.get(interaction.channel.parentId).messages.fetch(interaction.channel.id)
+                    if (client.channels.cache.get(m.id) == undefined) {lbl = "Thread not found"} else {lbl = client.channels.cache.get(m.id).name};
 
-                await interaction.channel.delete();
-                if (mid) {await mid.delete();}
-                return "OKAY";
-            }
-        });
+                    opt.addOptions(
+                        [
+                            {
+                                label: lbl,
+                                description: m.content,
+                                value: `${m.id}`
+                            }
+                        ]
+                    )
+                }
+            })
+            
+            let row = new MessageActionRow().addComponents(opt);
 
-		return "OKAY";
+            let m = await interaction.editReply( { content: 'Bulk deletion tool activated.\n', components: [row] } )
+
+            const filter = m => m.user.id === interaction.user.id;
+            const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+
+            collector.on('collect', async m => {
+                if (m.customId === "select") {
+                    console.log(m)
+                    opt.setPlaceholder('Working...')
+                    opt.setDisabled(true);
+
+                    await m.update({components: [row], ephemeral: true });
+
+                    m.values.forEach(async m => {
+                        let thread = client.channels.cache.get(m)
+                        let parentMsg = await interaction.channel.messages.fetch(m)
+
+                        if (thread) {thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
+                        if (parentMsg) {parentMsg.delete()}
+                    })
+                
+                    interaction.editReply( { content: 'Done.', components: null} )
+                    return "OKAY";
+                }
+            })
+
+            return "OKAY";
+    }
 	},
 };
