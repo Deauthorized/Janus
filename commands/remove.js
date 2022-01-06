@@ -103,7 +103,7 @@ module.exports = {
                         })
                     })
                         .then(() => {
-                            await interaction.editReply( { content: `Done.`, components: [] } )
+                            interaction.editReply( { content: `Done.`, components: [] } )
                         })
                     return "OKAY";
                 }
