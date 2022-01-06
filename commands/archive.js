@@ -10,7 +10,7 @@ module.exports = {
 	async execute(interaction) {
 		if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {
 			await interaction.reply({ content: 'You do not have permission to run this command.', ephemeral: true });
-			return "NO_PERMISSION	";
+			return "NO_PERMISSION";
 		}
 		if (interaction.channel.type !== "GUILD_PUBLIC_THREAD") {
 			await interaction.reply({ content: 'This command will only function in a thread.', ephemeral: true });
