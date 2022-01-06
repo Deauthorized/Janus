@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Permissions, MessageActionRow, MessageButton } = require('discord.js');
-const cfg = require('./config.json');
+const cfg = require('../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
