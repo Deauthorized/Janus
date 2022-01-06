@@ -4,5 +4,7 @@
     "guildId": "XXXXXXXXXXXXXXXXXX",
     "suggestionChannel": "XXXXXXXXXXXXXXXXXX",
     "bugChannel": "XXXXXXXXXXXXXXXXXX",
-    "saveChannel": "XXXXXXXXXXXXXXXXXX"
+    "saveChannel": "XXXXXXXXXXXXXXXXXX",
+    "noPermission": "You do not have permission to run this command.",
+    "notAThread": "This command will only function within a thread."
 }
