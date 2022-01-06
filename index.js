@@ -38,10 +38,8 @@ client.on('messageCreate', async message => {
             } else (!message.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)); {
                 if (message.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {return;}
 
-                let m = await message.reply("To create a suggestion, please prefix your message with `Suggestion:`")
-
-                message.delete()
-                setTimeout(() => m.delete(), 5000);
+                let m = await message.reply("To create a suggestion, please start your message with `Suggestion:`")
+                setTimeout(() => m.channel.bulkDelete([m.id, message.id]), 10000);
 
                 return;
             }
@@ -53,10 +51,8 @@ client.on('messageCreate', async message => {
             } else {
                 if (message.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {return;}
 
-                let m = await message.reply("To create a bug report, please prefix your message with `Bug:`")
-                
-                message.delete()
-                setTimeout(() => m.delete(), 5000);
+                let m = await message.reply("To create a bug report, please start your message with `Bug:`")
+                setTimeout(() => m.channel.bulkDelete([m.id, message.id]), 10000);
 
                 return;
             }
