@@ -92,16 +92,19 @@ module.exports = {
                     opt.setDisabled(true);
 
                     await m.update({components: [row], ephemeral: true });
-                    
-                    m.values.forEach(async m => {
-                        let thread = client.channels.cache.get(m)
-                        let parentMsg = await interaction.channel.messages.fetch(m)
 
-                        if (thread) {await thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
-                        if (parentMsg) {await parentMsg.delete({reason: `Message removed by ${interaction.member.user.username}`})}
+                    var purge = new Promise((resolve, reject) => {
+                        m.values.forEach(async m => {
+                            let thread = client.channels.cache.get(m)
+                            let parentMsg = await interaction.channel.messages.fetch(m)
+
+                            if (thread) {await thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
+                            if (parentMsg) {await parentMsg.delete({reason: `Message removed by ${interaction.member.user.username}`})}
+                        })
                     })
-                
-                    await interaction.editReply( { content: `Done.`, components: [] } )
+                        .then(() => {
+                            await interaction.editReply( { content: `Done.`, components: [] } )
+                        })
                     return "OKAY";
                 }
             })
