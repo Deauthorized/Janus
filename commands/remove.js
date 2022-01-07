@@ -43,8 +43,11 @@ module.exports = {
     
                     await interaction.channel.delete({reason: `Thread removed by ${interaction.member.user.username}`});
                     if (mid) {await mid.delete({reason: `Message removed by ${interaction.member.user.username}`});}
+                    console.log(`${interaction.user.tag} removed thread #${interaction.channel.name}.`);
                     return "OKAY";
                 }
+
+            return "OKAY";
             });
 		} else {
         await interaction.deferReply({ ephemeral: true });
@@ -96,11 +99,14 @@ module.exports = {
 
                     m.values.forEach(m => {
                         let thread = client.channels.cache.get(m)
-                        if (thread) {thread.delete({reason: `Thread removed by ${interaction.member.user.username}`})};
+                        if (thread) {
+                            console.log(`${interaction.user.tag} removed thread #${thread.name}.`);
+                            thread.delete({reason: `Thread removed by ${interaction.member.user.username}`}
+                        )};
                     })
 
                     let i = await interaction.channel.bulkDelete(m.values, true);
-                    interaction.editReply( { content: `Removed ${i.size} messages.`, components: [] } )
+                    interaction.editReply( { content: `Removed ${i.size} threads.`, components: [] } )
                     return "OKAY";
                 }
             })
