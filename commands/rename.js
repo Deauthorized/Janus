@@ -5,7 +5,7 @@ const cfg = require('../config.json');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('rename')
-		.setDescription('Set the thread name of a bug report or suggestion. Staff only.')
+		.setDescription('Set the thread name of a suggestion or bug report. Staff only.')
 		.addStringOption(option => option.setName('name').setDescription('New name').setRequired(true)),
 	async execute(interaction) {
 		if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {

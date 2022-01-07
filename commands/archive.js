@@ -5,7 +5,7 @@ const cfg = require('../config.json');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('archive')
-		.setDescription('Mark a bug report or suggestion as "resolved" and archive the thread. Staff only.')
+		.setDescription('Mark a suggestion or bug report as "resolved" and archive the thread. Staff only.')
 		.addStringOption(option => option.setName('reason').setDescription('Reason for closing this thread. Will be publically shown.'))
 		.addBooleanOption(option => option.setName('lock').setDescription('Prevent non-administrators from re-opening this thread. Defaults to "False".')),
 	async execute(interaction) {
