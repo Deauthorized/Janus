@@ -6,6 +6,10 @@ module.exports = {
     script: 'index.js',
   }],
 
+  dependancies: {
+    "discord.js": "*"
+  },
+
   repository: {
     type: "git",
     url: "https://github.com/Deauthorized/Janus"
