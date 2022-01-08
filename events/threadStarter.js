@@ -11,7 +11,7 @@ async function startThread(message, type) {
 
 module.exports = {
 	name: 'messageCreate',
-	async execute(message) {
+	async execute(message, client) {
         if (message.author.bot) return;
         if (message.type == "THREAD_STARTER_MESSAGE" && message.author == client.user.id) message.delete();
     
