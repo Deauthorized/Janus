@@ -7,11 +7,22 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 
 client.commands = new Collection();
 const commandFiles = fs.readdirSync(path.resolve(__dirname, 'commands')).filter(file => file.endsWith('.js'));
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.data.name, command);
     console.log(`Loaded command: ${command.data.name}`)
+}
+
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+    console.log(`Registered event: ${file}`)
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
 }
 
 async function startThread(message, type) {
@@ -24,39 +35,6 @@ async function startThread(message, type) {
 
 client.once('ready', () => {
 	console.log('Connected to Discord! Listening.');
-});
-
-client.on('messageCreate', async message => {
-    if (message.author.bot) return;
-    if (message.type == "THREAD_STARTER_MESSAGE" && message.author == client.user.id) message.delete();
-
-    switch (message.channelId) {
-        case cfg.suggestionChannel:
-            if (message.content.toLowerCase().startsWith("suggestion: ")) {
-                await startThread(message, "Suggestion");
-                return;
-            } else (!message.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)); {
-                if (message.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {return;}
-
-                let m = await message.reply("To create a suggestion, please start your message with `Suggestion:`")
-                setTimeout(() => m.channel.bulkDelete([m.id, message.id]), 10000);
-
-                return;
-            }
-
-        case cfg.bugChannel:
-            if (message.content.toLowerCase().startsWith("bug: ")) {
-                await startThread(message, "Bug Report");
-                return;
-            } else {
-                if (message.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {return;}
-
-                let m = await message.reply("To create a bug report, please start your message with `Bug:`")
-                setTimeout(() => m.channel.bulkDelete([m.id, message.id]), 10000);
-
-                return;
-            }
-    }
 });
 
 client.on('interactionCreate', async interaction => {
