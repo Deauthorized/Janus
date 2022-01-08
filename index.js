@@ -23,8 +23,16 @@ for (const file of eventFiles) {
 	}
 }
 
-client.once('ready', () => {
-	console.log('Connected to Discord! Listening.');
+client.on("error", (error) => {
+    console.error(`The connection to Discord was dropped.\n ${error}`);
+});
+
+client.on('reconnecting', () => {
+    console.log("Connecting to Discord...")
+});
+
+client.on('ready', () => {
+	console.log(`Connected to Discord! I am ${client.user.tag}.`);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -44,5 +52,4 @@ client.on('interactionCreate', async interaction => {
 });
 
 require(path.resolve(__dirname, 'cmdDeploy.js'))
-
 client.login(cfg.token);
