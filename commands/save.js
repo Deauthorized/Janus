@@ -10,7 +10,7 @@ async function createBookmark(threadId, type, client) {
     let savedThread = new MessageEmbed()
         .setColor((type == "SUGGESTION" ? '#5865F2' : type == "BUG" ? '#ED4245' : ""))
         .setAuthor({ name: `${m.author.username}#${m.author.discriminator}`, iconURL: m.author.avatarURL })
-        .setTitle((type == "SUGGESTION" ? 'Suggestion' : type == "BUG" ? 'Bug Report' : "") +  ` | ${t.name}`)
+        .setTitle("`" + (type == "SUGGESTION" ? 'Suggestion' : type == "BUG" ? 'Bug Report' : "") +  ` | ${t.name}`)
         .setDescription(m.content)
 
     let row = new MessageActionRow()
@@ -51,6 +51,8 @@ module.exports = {
             }
 			return "OKAY";
 		}
+        await interaction.deferReply({ ephemeral: true });
+
 		return "OKAY";
 	},
 };
