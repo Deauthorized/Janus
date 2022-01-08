@@ -1,0 +1,18 @@
+{
+    "name": "janus",
+    "version": "1.0.0",
+    "description": "janus",
+    "script": "index.js",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/Deauthorized/Janus"
+    },
+    "author": "deauthorized",
+    "license": "WTFPL",
+    "dependencies": {
+      "discord.js": "*",
+      "@discordjs/rest": "*",
+      "sqlite3": "",
+      "pm2": "*"
+    }
+  }
