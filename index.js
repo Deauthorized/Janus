@@ -38,12 +38,8 @@ client.on('interactionCreate', async interaction => {
         console.log(`${interaction.user.tag} in #${interaction.channel.name} triggered an interaction. (${interaction})`);
 		console.log(`Interaction returned: ` + await command.execute(interaction, client));
 	} catch (error) {
-		console.log(error);
-        if (interaction.replied) {
-            await interaction.editReply({ content: `Something has gone wrong. \n \`\`\`${error}\`\`\``, ephemeral: true });
-        } else {
-            await interaction.reply({ content: `Something has gone wrong. \n \`\`\`${error}\`\`\``, ephemeral: true });
-        }
+		console.error(error);
+        await interaction.editReply({ content: `Something has gone wrong. \n \`\`\`${error}\`\`\``, ephemeral: true });
 	}
 });
 
