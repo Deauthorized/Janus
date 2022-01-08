@@ -2,12 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { Client, Collection, Intents, Permissions } = require('discord.js');
 const cfg = require('./config.json');
-
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
-client.commands = new Collection();
 const commandFiles = fs.readdirSync(path.resolve(__dirname, 'commands')).filter(file => file.endsWith('.js'));
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+client.commands = new Collection();
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -23,14 +21,6 @@ for (const file of eventFiles) {
 	} else {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
-}
-
-async function startThread(message, type) {
-    await message.startThread({
-        name: `${type} (${require('crypto').randomBytes(5).toString("hex")})`,
-        autoArchiveDuration: 1440,
-        reason: `${type} created by ${message.author.username}`
-    })
 }
 
 client.once('ready', () => {

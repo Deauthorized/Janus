@@ -5,6 +5,7 @@
     "suggestionChannel": "XXXXXXXXXXXXXXXXXX",
     "bugChannel": "XXXXXXXXXXXXXXXXXX",
     "saveChannel": "XXXXXXXXXXXXXXXXXX",
+    "orphanedThreadAction": "warn", // none | warn | delete
     "noPermission": "You do not have permission to run this command.",
     "notAThread": "This command will only function within a thread."
 }
