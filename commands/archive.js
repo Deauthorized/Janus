@@ -24,7 +24,7 @@ module.exports = {
 		let lock = interaction.options.getBoolean('lock')
 
 		await interaction.deferReply({ ephemeral: true });
-		await interaction.channel.send((lock == true ? `:lock:` : "") + `:file_cabinet: **${interaction.member.user.username}** archived this thread` + (interaction.options.getString('reason') ? ` for the following reason: \`${interaction.options.getString('reason')}\`` : ""))
+		await interaction.channel.send((lock == true ? `:lock:` : "") + `:file_cabinet: **${interaction.member.user.tag}** archived this thread` + (interaction.options.getString('reason') ? ` for the following reason: \`${interaction.options.getString('reason')}\`` : ""))
 		if (lock == true) {
 			await interaction.channel.setLocked(lock);
 		}

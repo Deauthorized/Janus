@@ -38,12 +38,16 @@ module.exports = {
                     );
     
                     await m.update({components: [row], ephemeral: true });
-    
-                    let mid = await client.channels.cache.get(interaction.channel.parentId).messages.fetch(interaction.channel.id)
-    
+                    
                     console.log(`${interaction.user.tag} removed thread #${interaction.channel.name}.`);
                     await interaction.channel.delete({reason: `Thread removed by ${interaction.member.user.username}`});
-                    if (mid) {await mid.delete({reason: `Message removed by ${interaction.member.user.username}`});}
+
+                    try {
+                        let mid = await client.channels.cache.get(interaction.channel.parentId).messages.fetch(interaction.channel.id)
+                        await mid.delete({reason: `Message removed by ${interaction.member.user.tag}`});
+                    } catch {
+                        // Doesn't exist, do nothing.
+                    }
                     return "OKAY";
                 }
 

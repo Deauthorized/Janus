@@ -20,7 +20,7 @@ module.exports = {
 
         await interaction.channel.setName(interaction.options.getString('name'))
         if (!interaction.channel.archived) {
-		    await interaction.channel.send(`:pencil: **${interaction.member.user.username}** set the name of this thread to: \`${interaction.options.getString('name')}\``)
+		    await interaction.channel.send(`:pencil: **${interaction.member.user.tag}** set the name of this thread to: \`${interaction.options.getString('name')}\``)
         }
 
         await interaction.editReply(`Name set to: \`${interaction.options.getString('name')}\``);
