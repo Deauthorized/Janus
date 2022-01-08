@@ -1,4 +1,5 @@
 const cfg = require('../config.json');
+const { Permissions } = require('discord.js');
 
 async function startThread(message, type) {
     await message.startThread({
