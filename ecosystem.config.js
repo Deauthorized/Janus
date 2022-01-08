@@ -7,7 +7,8 @@ module.exports = {
   }],
 
   dependancies: {
-    "discord.js": "*"
+    "discord.js": "*",
+    "@discordjs/rest": "*"
   },
 
   repository: {
