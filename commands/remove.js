@@ -61,34 +61,29 @@ module.exports = {
                 .setPlaceholder('Select the threads to be removed.')
                 .setMinValues(1)
 
-            const fetched = await client.channels.cache.get(interaction.channel.id).messages.fetch({limit: 25})
+            const fetched = await interaction.channel.threads.fetchActive({limit: 25});
 
-            fetched.forEach(m => {
-                if (m.content.toLowerCase().startsWith("suggestion: ") || m.content.toLowerCase().startsWith("bug: ")) {
-                    let lbl
+            fetched.threads.forEach(async t => {
 
-                    if (client.channels.cache.get(m.id) == undefined) {lbl = "Thread not found"} else {lbl = client.channels.cache.get(m.id).name};
-
-                    opt.addOptions(
-                        [
-                            {
-                                label: lbl,
-                                description: m.content.substring(0, 100),
-                                value: `${m.id}`
-                            }
-                        ]
-                    )
-                }
+                opt.addOptions(
+                    [
+                        {
+                            label: `Issue #${t.name}`,
+                            description: `${t.messageCount} messages`,
+                            value: `${t.id}`
+                        }
+                    ]
+                )
             })
             
             if (opt.options.length == 0) {
-                await interaction.editReply('No messages found.')
+                await interaction.editReply('No active issues found.')
                 return "OKAY";
             }
             
             let row = new MessageActionRow().addComponents(opt);
 
-            let m = await interaction.editReply( { content: 'This tool will allow you to permanently delete multiple threads and their associated messages in one action. Please be careful, as it will run as soon as the drop-down is closed.\n\n', components: [row] } )
+            let m = await interaction.editReply( { content: 'This tool will allow you to permanently delete multiple issues and their associated messages in one action. Please be careful, as it will run as soon as the drop-down is closed.\n\n', components: [row] } )
 
             const filter = m => m.user.id === interaction.user.id;
             const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
@@ -101,16 +96,15 @@ module.exports = {
                     opt.setDisabled(true);
                     await m.update({components: [row], ephemeral: true });
 
-                    m.values.forEach(m => {
+                    m.values.forEach(async m => {
                         let thread = client.channels.cache.get(m)
                         if (thread) {
                             console.log(`${interaction.user.tag} removed thread #${thread.name}.`);
-                            thread.delete({reason: `Thread removed by ${interaction.member.user.username}`}
+                            await thread.delete({reason: `Thread removed by ${interaction.member.user.username}`}
                         )};
                     })
 
-                    let i = await interaction.channel.bulkDelete(m.values, true);
-                    interaction.editReply( { content: `Removed ${i.size} threads.`, components: [] } )
+                    interaction.editReply( { content: `Operation completed successfully.`, components: [] } )
                     return "OKAY";
                 }
             })
