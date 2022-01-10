@@ -11,7 +11,6 @@ module.exports = {
                 if (rows[0].bookmark_id !== null) {
                     await thread.guild.channels.cache.get(cfg.saveChannel).messages.fetch(rows[0].bookmark_id)
                         .then(m => {
-                            console.log(t)
                             let nEmb = new MessageEmbed(m.embeds[0])
                                     .setTitle((type == "SUGGESTION" ? 'Suggestion' : type == "BUG" ? 'Bug Report' : "") +  `: \`${t.name}\``)
                                     .setColor((t.archived ? "#5C5C5C" : type == "SUGGESTION" ? '#5865F2' : type == "BUG" ? '#ED4245' : ""))
