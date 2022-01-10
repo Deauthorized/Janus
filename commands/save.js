@@ -47,7 +47,7 @@ async function createBookmark(threadId, type, client, db, interaction) {
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('bookmark')
-		.setDescription('Bookmark a suggestion or bug report.'),
+		.setDescription('Bookmark a suggestion or bug report. Staff only.'),
 	async execute(interaction, client, db) {
         if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_THREADS)) {
 			await interaction.reply({ content: cfg.noPermission, ephemeral: true });
