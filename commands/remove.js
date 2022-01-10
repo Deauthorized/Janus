@@ -12,7 +12,7 @@ module.exports = {
 			return "NO_PERMISSION";
 		}
 
-        if (interaction.channel.type == "GUILD_PUBLIC_THREAD") {
+        if (interaction.channel.isThread()) {
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()

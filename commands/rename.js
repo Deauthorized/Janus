@@ -4,7 +4,7 @@ const cfg = require('../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('rename')
+		.setName('name')
 		.setDescription('Set the thread name of a suggestion or bug report. Staff only.')
 		.addStringOption(option => option.setName('name').setDescription('New name').setRequired(true)),
 	async execute(interaction) {
