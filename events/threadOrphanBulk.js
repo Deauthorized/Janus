@@ -14,7 +14,7 @@ module.exports = {
                         return;
                     
                     case "warn":
-                        await t.send(":warning **" + cfg.orphanedThreadMsg + "**")
+                        await t.send(":warning: **" + cfg.orphanedThreadMsg + "**")
                         return;
     
                     case "lock":
