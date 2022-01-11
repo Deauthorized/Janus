@@ -3,7 +3,7 @@ module.exports = {
     name: 'Janus',
     description: 'I manage suggestions and bug reports.',
     version: '1.0.0',
-    script: 'index.js',
+    script: './src/index.js',
   }],
 
   dependancies: {
